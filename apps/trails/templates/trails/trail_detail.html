@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Index</title>
+	{% load staticfiles %}
+  	<link rel="stylesheet" href="{% static 'trails/css/styles.css' %}">
+
+
+  	 <style>
+       #map {
+        height: 400px;
+        width: 820px;
+        margin: 10px;
+       }
+       
+    </style>
+</head>
+<body>
+<div id="header">
+<a href="/"><img src="{% static 'trails/images/logo.png'%}" class="logo" width="230" height="140"></a>
+<table id="sub_header">
+	<tr>
+		<td>
+		<div class="main_login">
+		<p>
+		<ul class="dropdown_top">
+		 	<li class="dropdown">
+			    <a href="#" class="dropbtn"><img src="{% static 'trails/images/login.png'%}" width="35" ></a>
+			    <div class="dropdown-content">
+			      <a href="/login">Login</a>
+			      <a href="/insert">Register</a>
+            	  <a href="/trips">My Trips</a>
+			    </div>
+			  </li>			  
+			  <li><a class="active" href="#"><img src="{% static 'trails/images/help.png'%}" width="35" ></a></li>		
+			</ul>
+		</p>
+		</div>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<hr>
+		<ul class="menu">
+        <li><a class="active" href="/">Home</a></li>
+        <li><a href="/search">Trails</a></li>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">About Us</a></li>
+      </ul>
+  
+		</td>
+	</tr>
+</table>
+</div>
+<div id="main_trail">
+{%if request.session.user_id == None%}
+<h4>Welcome!!
+{% else %}
+Welcome, {{request.session.name}}! &nbsp;
+<a href="/logout" class="link">Log out</a> </h4>
+{%endif%}
+<div id="trail_search">
+<div>
+<div class="result_detail">
+<h1>{{city}}</h1>
+<h1>{{temp}} &#8457;</h1>
+<p><img src="{{img_condition}}" class="url"></p>
+{% if text == 'Partly Cloudy' %}
+<p><img src="{% static 'trails/images/Partly_Cloudy.png'%}" class="img_forcast"></p>
+{% elif text == 'Showers' %}
+<p><img src="{% static 'trails/images/Shower.png'%}" class="img_forcast"></p>
+{% elif text == 'Mostly Cloudy' %}
+<p><img src="{% static 'trails/images/Mostly_Cloudy.png'%}" class="img_forcast"></p>
+{% elif text == 'Scattered Showers'%}
+<p><img src="{% static 'trails/images/Scattered_showers.png'%}" class="img_forcast"></p>
+{% elif text == 'Mostly Sunny' or text == 'Sunny' %}
+<p><img src="{% static 'trails/images/Mostly_Sunny.png'%}" class="img_forcast"></p>
+{% elif text == 'Cloudy' %}
+<p><img src="{% static 'trails/images/Cloudy.png'%}" class="img_forcast"></p>
+{%else%}
+<p>{{text}}</p>
+{%endif%}
+
+<p>Humidity: {{humidity}} %</p>
+<p>Visibility: {{visibility}} miles</p>
+<br>
+<h4>Forcast 10 days</h4>
+<br>
+<div class="forcast">
+<table id="forcast">
+<tr>
+	{% for x in forecast %}
+	<td  class="weather">{{x.day}} <br>
+{% if x.text == 'Partly Cloudy' %}
+<p><img src="{% static 'trails/images/forcast_partly_cloudy.png'%}" class="img_forcast"></p>
+{% elif x.text == 'Showers' %}
+<p><img src="{% static 'trails/images/forcast_shower.png'%}" class="img_forcast"></p>
+{% elif x.text == 'Mostly Cloudy' %}
+<p><img src="{% static 'trails/images/forcast_mostly_cloudy.png'%}" class="img_forcast"></p>
+{% elif x.text == 'Scattered Showers'%}
+<p><img src="{% static 'trails/images/forcast_scattered_showers.png'%}" class="img_forcast"></p>
+{% elif x.text == 'Rain'%}
+<p><img src="{% static 'trails/images/forcast_rain.png'%}" class="img_forcast"></p>
+{% elif x.text == 'Mostly Sunny' or x.text == 'Sunny' %}
+<p><img src="{% static 'trails/images/forcast_mostly_sunny.png'%}" class="img_forcast"></p>
+{% elif x.text == 'Cloudy' %}
+<p><img src="{% static 'trails/images/forcast_cloudy.png'%}" class="img_forcast"></p>
+{% elif x.text == 'Freezing Rain' or x.text == 'Wintry Mix' or x.text == 'Rain And Snow' %}
+<p><img src="{% static 'trails/images/forcast_freezing_rain.png'%}" class="img_forcast"></p>
+{% elif x.text == 'Scattered Snow Showers' or x.text == 'Snow Showers' %}
+<p><img src="{% static 'trails/images/forcast_snow_shower.png'%}" class="img_forcast"></p>
+{% elif x.text == 'Snow'%}
+<p><img src="{% static 'trails/images/forcast_snow.png'%}" class="img_forcast"></p>
+
+{%else%}
+<p>{{x.text}}</p>
+{%endif%}
+{% endfor %}
+	</tr>
+	<tr>
+{% for x in forecast %}
+	<td>{{x.high}}&#176; / {{x.low}}&#176;</td>
+{% endfor %}
+	</tr>
+
+</table>
+</div>
+
+
+	{% for x in result %}
+	{% if trail_id == x.unique_id%}
+	
+		<h2>{{x.name}}</h2>
+		<p><strong>City:</strong> {{x.city}}</p>
+		<p><strong>State:</strong> {{x.state}}</p>
+		<p><strong>Country:</strong> {{x.country}}</p>
+		<p><strong>Description:</strong> {{x.description}}</p>
+		<p><strong>Direction:</strong> {{x.directions|safe}}</p>
+		<br>
+	{% for x in x.activities %}
+		{%if x.thumbnail != None%}
+			<p><a href="{{x.thumbnail}}" target='_blank'><img src="{{x.thumbnail}}" class="photo"></a></p>
+			{%else%}
+		{%endif%}
+		<br>
+		{% for x in messages %}
+			{%if unique_trail_id == x.unique_trail_id%}
+				{%if x.rating == 1 %}
+					<p><strong>Rating:</strong> <img src="{% static 'trails/images/star1.png'%}" class="star"></p> 
+					{%elif x.rating == 2 %}
+					<p><strong>Rating:</strong> <img src="{% static 'trails/images/star2.png'%}" class="star"></p> 
+					{%elif x.rating == 3 %}
+					<p><strong>Rating:</strong> <img src="{% static 'trails/images/star3.png'%}" class="star"></p> 
+					{%elif x.rating == 4 %}
+					<p><strong>Rating:</strong> <img src="{% static 'trails/images/star4.png'%}" class="star"></p> 
+					{%elif x.rating == 5 %}
+					<p><strong>Rating:</strong> <img src="{% static 'trails/images/star5.png'%}" class="star"></p> 
+					{%else%} 
+					<p><strong>Rating:</strong> <img src="{% static 'trails/images/star0.png'%}" class="star"></p> 
+				{%endif%}
+			{%endif%}	
+			{% endfor %}
+	{% endfor %}
+
+	</div>
+	 <div class="map">
+<div id="map"></div>
+<script>
+      function initMap() {
+        var uluru = {lat: {{x.lat}}, lng: {{x.lon}}};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 15,
+          center: uluru
+        });
+        var marker = new google.maps.Marker({
+          position: uluru,
+          map: map
+        });
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjA3ZnVFi-rl_P0OuLZAcZtRdyAyKqKMg&callback=initMap">
+    </script>
+	{%endif%}
+	{% endfor %}	
+	</div>
+	<div class="review_comment">
+
+	<form action="/process" class="content" method="POST">
+	{% csrf_token %}
+	<h4>Your review</h4>
+	<br>
+	<p>Select your Rating: 
+	<!--  Start Rating Star -->
+	<select name="rating">
+	  <option value="1">1</option>
+	  <option value="2">2</option>
+	  <option value="3" selected>3</option>
+	  <option value="4">4</option>
+	  <option value="5">5</option>
+	</select>	
+	</p>
+	<!--  End Rating Star -->	
+	<br>
+	<textarea rows="8" cols="125" name="message" id="message" placeholder="Your review helps others learn about this trail"></textarea><br>
+	<input type="submit" name="submit" value="Post your review" class="btn_message">
+	<br>
+	<div class="review_content">
+	<br>
+	{% for x in messages %}
+	
+	{%if x.unique_trail_id == unique_trail_id %}
+		<h4 class="review_head">Trail No.: {{x.unique_trail_id}} <br>{{x.user.first_name}} {{x.user.last_name}} - {{x.user.created_at}}</h4>
+		<p>	 
+			{%if x.rating == 1 %}
+			<p>Rating: <img src="{% static 'trails/images/star1.png'%}" class="star"></p> 
+			{%elif x.rating == 2 %}
+			<p>Rating: <img src="{% static 'trails/images/star2.png'%}" class="star"></p> 
+			{%elif x.rating == 3 %}
+			<p>Rating: <img src="{% static 'trails/images/star3.png'%}" class="star"></p> 
+			{%elif x.rating == 4 %}
+			<p>Rating: <img src="{% static 'trails/images/star4.png'%}" class="star"></p> 
+			{%elif x.rating == 5 %}
+			<p>Rating: <img src="{% static 'trails/images/star5.png'%}" class="star"></p> 
+			{%endif%}
+		</p>
+
+		<span class="content_info_message">{{x.message}}</span>
+		<h4 class="review_head">Comment:</h4>
+		{% for y in comments%}
+		
+			{% if x.id == y.message_id%}
+		<h5>- {{y.user.first_name}} {{y.user.last_name}} - {{y.user.created_at}}</h5>
+		<span class="content_info_comment">{{y.comment}}</span>
+			{%endif%}
+		{%endfor%}
+	</div>
+	</form><br>
+	<form action="/process2" class="content_comment" method="post">
+	{% csrf_token %}
+		<h4>Post a comment:</h4>
+		<p><textarea rows="5" maxlength="500" cols="120" name="comment" id="comment" placeholder="Your comment helps others learn about this trail"></textarea></p>
+		<input type="hidden" name="message_id" id="message_id" value="{{x.id}}">
+		<input type="submit" name="submit" value="Post a comment" class="btn_comment">
+	</form>
+	{%endif%}
+	{%endfor%}
+	</div>
+</div>
+</div>
+</div>
+<div class="footer">
+	<div id="footer">
+	<table class="table_footer">
+		<tr>
+			<td><a href="/" class="list">Home</a></td>
+			<td><a href="/login" class="list">Login</a></td>
+
+		</tr>
+		<tr>
+			<td><a href="/search" class="list">Trails</a></td>
+			<td><a href="/insert" class="list">Register</a></td>
+			<td>
+			<div id="social">
+			<img class="social" src="{% static 'trails/images/facebook.png'%}"   alt="facebook" >&nbsp;&nbsp;
+			<img src="{% static 'trails/images/instagram.png'%}"   alt="instagram" width="37">&nbsp;&nbsp;
+			<img src="{% static 'trails/images/tripadvisor.png'%}"  alt="tripadvisor" width="37">&nbsp;&nbsp;
+			</div>
+			</td>
+		</tr>
+		<tr>
+			<td><a href="#" class="list">Contact Us</a></td>
+			<td><a href="/trips" class="list">My Trips</a></td>
+		</tr>
+		<tr>
+			<td><br><a href="#" class="list">About Us</a></td>
+			<td></td>
+		</tr>
+
+	</table>
+	<span class="text_footer">© 2016 Trailbuddy.com or its affiliates. Trailbuddy is operated by Coding Dojo.</span>	
+
+	</div>
+</div>
+
+</body>
+</html>

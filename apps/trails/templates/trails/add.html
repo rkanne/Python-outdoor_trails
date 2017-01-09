@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Add Trip</title>
+		{% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'trails/css/styles.css' %}">
+
+</head>
+<body>
+<div id="main">
+<div id="header">
+
+<a href="/"><img src="{% static 'trails/images/logo.png'%}" class="logo" width="220" height="140"></a>
+<table id="sub_header">
+	<tr>
+		<td>
+		<div class="main_login">
+		<p>
+		<ul class="dropdown_top">
+		 	<li class="dropdown">
+			    <a href="#" class="dropbtn"><img src="{% static 'trails/images/login.png'%}" width="35" ></a>
+			    <div class="dropdown-content">
+			      <a href="/login">Login</a>
+			      <a href="/insert">Register</a>
+            	  <a href="/trips">My Trips</a>
+			    </div>
+			  </li>			  
+			  <li><a class="active" href="#"><img src="{% static 'trails/images/help.png'%}" width="35" ></a></li>			 
+			</ul>
+
+		</p>
+		</div>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<ul>
+        <li><a class="active" href="/">Home</a></li>
+        <li><a href="/search">Trails</a></li>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">About Us</a></li>
+      </ul>
+		</td>
+	</tr>
+</table>
+</div>
+<div id="trail_search">
+<h3>{{request.session.name}} </h3>
+<h4><a href="/logout" class="link">Logout</a></h4>
+<form action="/trail/create" method="POST">
+{% csrf_token %}
+<h1>Add a Trip</h1>
+<p>Destination: <input type="text" name="txt_destination" id="txt_destination"></p>
+<p>Description:</p>
+<p><textarea cols="50" rows="10" name="txt_description"></textarea></p>
+<p>Travel Date From: <input type="date" name="txt_date_from" id="txt_date_from"></p>
+<p>Travel Date To: <input type="date" name="txt_date_to" id="txt_date_to"></p>
+
+<p><input type="submit" name="submit" value="Add"></p>
+</form>
+{% for msg in messages %}       
+  <p>
+ ***{{msg}}
+  </p>
+{% endfor %}
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Travel</title>
+		{% load staticfiles %}
+  	<link rel="stylesheet" href="{% static 'trails/css/styles.css' %}">
+</head>
+<body>
+<div id="wrapper">
+<h1>Hello,
+{{request.session.name}}
+	!</h4>
+	<div class="header"><h4><a href="/logout">Log out</a></div>
+</h1>
+<div class="trip_schedules">
+<h3>Your Trip Schedules</h3>
+<table>
+	<tr class="head">
+		<th>Destination</th>
+		<th>Travel Start Date</th>
+		<th>Travel End Date</th>
+		<th>Plan</th>
+		<th></th>
+
+	</tr>
+	{% for x in joins %}
+	<tr>
+		<td><a href="travels/destination/{{x.trip.id}}">{{x.trip.destination}}</a></td>	
+		<td>{{x.trip.travel_from}}</td>
+		<td>{{x.trip.travel_to}}</td>
+		<td>{{x.trip.description}}</td>
+		<td><a href="travels/delete/{{x.trip.id}}">remove</a></td>
+		</tr>
+	{% endfor %}
+</table>
+		
+</div>
+<div class="travel_plan">
+{% for msg in messages %}       
+  <p class="message">
+ ***{{msg}}
+  </p>
+{% endfor %}
+<h3>Other User's Travel Plan</h3>
+	<table>
+		<tr  class="head">
+			<th>Name</th>
+			<th>Destination</th>
+			<th>Travel Start Date</th>
+			<th>Travel End Date</th>
+			<th>Do you want to Join?</th>
+		</tr>
+		{% for x in trips_other %}
+		<tr>
+		<td>
+			{{x.user.name}}
+		</td>
+		<td><a href="travels/destination/{{x.id}}">{{x.destination}}</a></td>	
+		<td>{{x.travel_from}}</td>
+		<td>{{x.travel_to}}</td>
+		<td> 
+		<a href="travels/join/{{x.id}}"> Join</a>
+		</td>
+		</tr>	
+		{% endfor %}
+		
+	</table>
+	
+	<p>	<h4><a href="/travels/add">Add Travel Plan</a></h4>
+</p>
+</div>
+</div>
+</body>
+</html>

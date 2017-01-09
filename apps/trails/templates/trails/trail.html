@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Index</title>
+	{% load staticfiles %}
+  	<link rel="stylesheet" href="{% static 'trails/css/styles.css' %}">
+
+</head>
+<body>
+<div id="header">
+<a href="/"><img src="{% static 'trails/images/logo.png'%}" class="logo" width="230" height="140"></a>
+<table id="sub_header">
+	<tr>
+		<td>
+		<div class="main_login">
+		<p>
+		<ul class="dropdown_top">
+		 	<li class="dropdown">
+			    <a href="#" class="dropbtn"><img src="{% static 'trails/images/login.png'%}" width="35" ></a>
+			    <div class="dropdown-content">
+			      <a href="/login">Login</a>
+			      <a href="/insert">Register</a>
+            	  <a href="/trips">My Trips</a>
+			    </div>
+			  </li>			  
+			  <li><a class="active" href="#"><img src="{% static 'trails/images/help.png'%}" width="35" ></a></li>		
+			</ul>
+		</p>
+		</div>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<hr>
+		<ul class="menu">
+        <li><a class="active" href="/">Home</a></li>
+        <li><a href="/search">Trails</a></li>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">About Us</a></li>
+      </ul>
+  
+		</td>
+	</tr>
+</table>
+</div>
+<div id="trail_search">
+{%if request.session.user_id == None%}
+<h4>Welcome!!
+{% else %}
+Welcome, {{request.session.name}}! &nbsp; 
+<a href="/logout" class="link">Log out</a></h4>
+{%endif%}
+
+<form action="/search" method="POST">
+{% csrf_token %}
+
+<div>
+	<h2>Find your Trail in the United States</h2>
+	<div class="search_trails">
+	Name of a specific park or trail: <input type="text" name="name" id="name">
+	State:
+	<select name="state">
+	{% for x in state %}
+  		<option value="{{x.state_name}}">{{x.state_name}}</option>
+  	{% endfor %}
+	</select>
+	<input type="submit" name="submit" id="submit" value="Search">
+	</div>
+
+	{{name}}
+	{% for x in result %}
+	{%if name in x.name %}
+
+	<div class="result">
+		<div class="box">
+		<h2><a href="trails/{{x.unique_id}}" class="link">{{x.name}}</a></h2>
+		<p>City: {{x.city}}</p>
+		<p>State: {{x.state}}</p>
+		<p>Country: {{x.country}}</p>
+		<p>Description: {{x.description}}</p>
+		<p>Direction: {{x.directions|safe}}</p>
+		 
+		{% for x in x.activities %}
+			{%if x.thumbnail == None%}
+			{%if x.rating|floatformat:0 == '0' %}
+			<p>Rating: <img src="{% static 'trails/images/star0.png'%}" class="star"></p> 
+			{%elif x.rating|floatformat:0 == '1' %}
+			<p>Rating: <img src="{% static 'trails/images/star1.png'%}" class="star"></p> 
+			{%elif x.rating|floatformat:0 == '2' %}
+			<p>Rating: <img src="{% static 'trails/images/star2.png'%}" class="star"></p> 
+			{%elif x.rating|floatformat:0 == '3' %}
+			<p>Rating: <img src="{% static 'trails/images/star3.png'%}" class="star"></p> 
+			{%elif x.rating|floatformat:0 == '4' %}
+			<p>Rating: <img src="{% static 'trails/images/star4.png'%}" class="star"></p> 
+			{%elif x.rating|floatformat:0 == '5' %}
+			<p>Rating: <img src="{% static 'trails/images/star5.png'%}" class="star"></p> 
+			{%endif%}
+			<p>Image: None</p> 
+		{%else%}
+		<p>Image: </p> 
+		<br>
+		<p><a href="{{x.thumbnail}}" target='_blank'><img src="{{x.thumbnail}}" class="photo"></a></p>
+		{%endif%}
+	{% endfor %}
+	</div>
+	<div class="second_box">
+	<a href="trail/add/{{x.unique_id}}" class="link">&nbsp; &nbsp; &#187; Create Trip</a>
+	
+	</div>
+	</div>
+
+	{%endif%}
+	{% endfor %}
+
+
+</div>
+</form>
+</div>
+<div class="footer">
+	<div id="footer">
+	<table class="table_footer">
+		<tr>
+			<td><a href="/" class="list">Home</a></td>
+			<td><a href="/login" class="list">Login</a></td>
+
+		</tr>
+		<tr>
+			<td><a href="/search" class="list">Trails</a></td>
+			<td><a href="/insert" class="list">Register</a></td>
+			<td>
+			<div id="social">
+			<img class="social" src="{% static 'trails/images/facebook.png'%}"   alt="facebook" >&nbsp;&nbsp;
+			<img src="{% static 'trails/images/instagram.png'%}"   alt="instagram" width="37">&nbsp;&nbsp;
+			<img src="{% static 'trails/images/tripadvisor.png'%}"  alt="tripadvisor" width="37">&nbsp;&nbsp;
+			</div>
+			</td>
+		</tr>
+		<tr>
+			<td><a href="#" class="list">Contact Us</a></td>
+			<td><a href="/trips" class="list">My Trips</a></td>
+		</tr>
+		<tr>
+			<td><br><a href="#" class="list">About Us</a></td>
+			<td></td>
+		</tr>
+
+	</table>
+	<span class="text_footer">© 2016 Trailbuddy.com or its affiliates. Trailbuddy is operated by Coding Dojo.</span>	
+
+	</div>
+	</div></body>
+</html>

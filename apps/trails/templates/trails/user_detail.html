@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>User detail</title>
+		{% load staticfiles %}
+  	<link rel="stylesheet" href="{% static 'trails/css/styles.css' %}">
+</head>
+<body>
+<div id="header">
+<a href="/"><img src="{% static 'trails/images/logo.png'%}" class="logo" width="230" height="140"></a>
+<table id="sub_header">
+	<tr>
+		<td>
+		<div class="main_login">
+		<p>
+		<ul class="dropdown_top">
+		 	<li class="dropdown">
+			    <a href="#" class="dropbtn"><img src="{% static 'trails/images/login.png'%}" width="35" ></a>
+			    <div class="dropdown-content">
+			      <a href="/login">Login</a>
+			      <a href="/insert">Register</a>
+            	  <a href="/trips">My Trips</a>
+			    </div>
+			  </li>			  
+			  <li><a class="active" href="#"><img src="{% static 'trails/images/help.png'%}" width="35" ></a></li>		
+			</ul>
+		</p>
+		</div>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<hr>
+		<ul class="menu">
+        <li><a class="active" href="/">Home</a></li>
+        <li><a href="/search">Trails</a></li>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">About Us</a></li>
+      </ul>
+  
+		</td>
+	</tr>
+</table>
+</div>
+<div id="trail_search">
+<div class="destination">
+{%if request.session.user_id == None%}
+<h4>Welcome!!
+{% else %}
+Welcome, {{request.session.name}}! &nbsp;
+<a href="/logout" class="link">Log out</a> </h4>
+{%endif%}
+
+<h2>{{trip.0.destination}}</h2>
+{% for x in trip %}
+{% for y in user %}
+{%if y.id == x.user_id%}
+<p>Planned by: {{y.first_name}}</p>		
+{%endif%}
+{%endfor%}
+{%endfor%}
+<p>Description: {{trip.0.description}}</p>
+<p>Travel Date From: {{trip.0.trip_start}}</p>
+<p>Travel Date To: {{trip.0.trip_end}}</p>
+
+</div>
+<br>
+<br>
+<div class="destination">
+
+<h3>Other users'joining the trip</h3>
+{% for x in join %}
+{% if x.trip_id == trip.0.id %}
+{% if x.user.id != x.trip.user_id %}
+<p>{{x.user.first_name}} 
+{% if x.user.id == request.session.user_id %}
+<a href="/remove/{{x.trip_id}}/{{x.user.id}}" class="link">Remove join</a>
+{%endif %}
+{%endif %}
+</p>
+{%endif%}
+
+
+{%endfor%}
+</div>
+<br>
+<br>
+<p><a href="/trips" class="link">Back</a></p>
+
+
+</div>
+</div>
+</body>
+</html>
